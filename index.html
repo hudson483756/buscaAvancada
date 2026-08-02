@@ -1,1 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrine de Pesquisa | Busca Neutra & IA</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .search-button {
+            padding: 14px 24px;
+            border-radius: 12px;
+            border: none;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .links-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-card {
+            background-color: var(--card-bg);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .link-card a {
+            color: #818cf8;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .link-url {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .image-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            height: 200px;
+            position: relative;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-card a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .status-message {
+            text-align: center;
+            color: var(--text-secondary);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .search-container {
+                flex-direction: column;
+            }
+            .image-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .image-card {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Vitrine de Pesquisa</h1>
+        <p class="subtitle">Agregador neutro de dados da Web & Computação Quântica</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Digite sua pesquisa..." onkeypress="handleKeyPress(event)">
+        <button class="search-button" onclick="executarPesquisa()">Pesquisar</button>
+    </div>
+
+    <main class="main-content">
+        <section>
+            <h2 class="section-title">Links & Fontes Encontradas</h2>
+            <div id="linksContainer" class="links-grid">
+                <div class="status-message">Faça uma busca para carregar os links da internet.</div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Vitrine de Imagens</h2>
+            <div id="imagesContainer" class="image-gallery">
+                <div class="status-message">As imagens originais da web serão exibidas aqui.</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                executarPesquisa();
+            }
+        }
+
+        function executarPesquisa() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            const linksContainer = document.getElementById('linksContainer');
+            const imagesContainer = document.getElementById('imagesContainer');
+
+            linksContainer.innerHTML = '<div class="status-message">Buscando fontes na web...</div>';
+            imagesContainer.innerHTML = '<div class="status-message">Carregando vitrine de imagens...</div>';
+
+            setTimeout(() => {
+                const dadosExemplo = {
+                    links: [
+                        { titulo: "Resultado sobre " + query, url: "https://example.com" },
+                        { titulo: "Fonte de conteúdo da busca", url: "https://example.org" }
+                    ],
+                    imagens: [
+                        "https://picsum.photos/400/300?random=1",
+                        "https://picsum.photos/400/300?random=2"
+                    ]
+                };
+
+                renderizarResultados(dadosExemplo);
+            }, 800);
+        }
+
+        function renderizarResultados(dados) {
+            const linksContainer = document.getElementById('linksContainer');
+            const imagesContainer = document.getElementById('imagesContainer');
+
+            if (dados.links && dados.links.length > 0) {
+                linksContainer.innerHTML = dados.links.map(item => `
+                    <div class="link-card">
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.titulo}</a>
+                        <div class="link-url">${item.url}</div>
+                    </div>
+                `).join('');
+            }
+
+            if (dados.imagens && dados.imagens.length > 0) {
+                imagesContainer.innerHTML = dados.imagens.map(imgUrl => `
+                    <div class="image-card">
+                        <a href="${imgUrl}" target="_blank" rel="noopener noreferrer"></a>
+                        <img src="${imgUrl}" alt="Resultado" loading="lazy" onerror="this.parentElement.style.display='none'">
+                    </div>
+                `).join('');
+            }
+        }
+    </script>
+</body>
+</html>
 
